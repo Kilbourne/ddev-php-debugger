@@ -7,8 +7,8 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 RUN set -eu; \
-    PHP_MAJOR=$(php -r 'echo PHP_MAJOR_VERSION;'); \
-    PHP_MINOR=$(php -r 'echo PHP_MINOR_VERSION;'); \
+    PHP_MAJOR=$(php${DDEV_PHP_VERSION} -r 'echo PHP_MAJOR_VERSION;'); \
+    PHP_MINOR=$(php${DDEV_PHP_VERSION} -r 'echo PHP_MINOR_VERSION;'); \
     echo "Detected PHP ${PHP_MAJOR}.${PHP_MINOR}"; \
     \
     # Version guard: php-debugger requires PHP 8.2+ \
@@ -18,7 +18,7 @@ RUN set -eu; \
     fi; \
     \
     # Locate the current xdebug.so for the active PHP version \
-    PHP_EXT_DIR=$(php -r 'echo ini_get("extension_dir");'); \
+    PHP_EXT_DIR=$(php${DDEV_PHP_VERSION} -r 'echo ini_get("extension_dir");'); \
     XDEBUG_SO="${PHP_EXT_DIR}/xdebug.so"; \
     if [ ! -f "$XDEBUG_SO" ]; then \
         echo "ERROR: Could not find xdebug.so at ${XDEBUG_SO}. Is Xdebug installed?" >&2; \
